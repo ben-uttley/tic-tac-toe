@@ -11,20 +11,20 @@
 
 (defn take-turn [player board]
   "Take a turn from keyboard input"
-  (let [player (s/assert ::ttt.spec/player player)
-        board (s/assert ::ttt.spec/board board)]
+  (let [player player
+        board board]
     (println (str (clojure.string/upper-case (name player)) "'s turn: ") "Enter a number between 1-9")
     (loop [position (get-position-input player)]
       (if (and position (ttt.core/can-move? position board))
-        (s/assert ::ttt.spec/board (ttt.core/make-move player position board))
+        (ttt.core/make-move player position board)
         (do
           (println "The chosen move is not available, please chose again")
           (recur (get-position-input player)))))))
 
 (defn play-game [starting-board turns]
   "Main game loop"
-  (let [starting-board (s/assert ::ttt.spec/board starting-board)
-        turns (s/assert (s/coll-of ::ttt.spec/player) turns)])
+  (let [starting-board starting-board
+        turns turns])
   (loop [board starting-board
          turns turns]
     (ttt.core/draw-board board)

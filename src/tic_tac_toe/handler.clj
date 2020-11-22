@@ -19,7 +19,10 @@
   (response/ok (ttt.api/join-game (Integer/parseInt id))))
 
 (defn handle-make-move [id position player]
-    (response/ok (ttt.api/make-move (Integer/parseInt id) player (Integer/parseInt position))))
+  (let [result (ttt.api/make-move (Integer/parseInt id) player (Integer/parseInt position))]
+    (case 
+        (= (result :status) "bad") (response/bad-request (result :content))
+        (= (result :status) "ok") (response/ok (result :content)))))
 
 (defroutes app-routes
   (POST "/game" [] (handle-create-game))
@@ -34,4 +37,4 @@
       (logger/wrap-with-logger)))
 
 (defn start-server []
-  (server/run-server app {:port 3000}))
+  (server/run-server app {:port 3010}))
